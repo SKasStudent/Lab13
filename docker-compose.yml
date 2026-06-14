@@ -1,0 +1,77 @@
+services:
+
+  nginx:
+    image: nginx:1.31
+    container_name: nginx
+    ports:
+      - "4001:80"
+    volumes:
+      - ./src/:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+    depends_on:
+      - php
+    networks:
+      - front
+      - back
+
+  php:
+    image: php:8.5-fpm
+    container_name: php
+    volumes:
+      - ./src:/var/www/html
+    restart: unless-stopped
+    networks:
+      - back
+
+  mysql:
+    image: mysql:9.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/rootpass
+      MYSQL_DATABASE_FILE: /run/secrets/db
+      MYSQL_USER_FILE: /run/secrets/user
+      MYSQL_PASSWORD_FILE: /run/secrets/userpass
+    secrets:
+      - rootpass
+      - db
+      - user
+      - userpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - back
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.3
+    container_name: phpmyadmin
+    ports:
+      - "6001:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    networks:
+      - back
+
+networks:
+  front:
+    driver: bridge
+  back:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+secrets:
+  rootpass:
+    file: ./secrets/rootpass.txt
+  db:
+    file: ./secrets/db.txt
+  user:
+    file: ./secrets/user.txt
+  userpass:
+    file: ./secrets/userpass.txt
