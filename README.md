@@ -1,5 +1,9 @@
 # Laboratorium 13 + 13D
 
+> [!NOTE]
+> Na potrzeby udowodnienia poprawnego działania stosu lemp dodana została do php biblioteka mysqli, która
+> podstawowo nie jest dołączana do obrazu.
+
 ## Architektura
 |**Usługa**|**Obraz**|**Sieci**|**Port**|
 |----------|---------|---------|--------|
