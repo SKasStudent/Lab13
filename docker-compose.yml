@@ -16,7 +16,8 @@ services:
       - back
 
   php:
-    image: php:8.5-fpm
+    build: ./php
+    image: php:8.5-fpm-mysqli
     container_name: php
     volumes:
       - ./src:/var/www/html
