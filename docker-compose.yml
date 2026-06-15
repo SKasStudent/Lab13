@@ -21,6 +21,10 @@ services:
     container_name: php
     volumes:
       - ./src:/var/www/html
+    secrets:
+      - user
+      - userpass
+      - db
     restart: unless-stopped
     networks:
       - back
